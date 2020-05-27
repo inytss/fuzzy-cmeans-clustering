@@ -1,0 +1,192 @@
+---
+title: "Fuzzy Clustering"
+author: "Inayatus"
+date: "4/28/2020"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+    number_sections: true
+    toc_depth: 2
+    df_print: paged
+    theme: united
+    highlight: breezedark
+    code_folding: hide
+---
+<style>
+head {
+text-align: center
+}
+body {
+text-align: justify
+}
+</style>
+
+```{r setup, include=FALSE}
+rm(list = ls())
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.align = "center",
+                      comment = "#>")
+options(scipen = 99)
+```
+
+# Introduction {.tabset}
+
+## Clustering
+
+Clustering merupakan salah satu cabang metode dalam machine learning dan termasuk dalam unsupervised learning. Clustering bertujuan untuk mengelompokkan suatu item data kedalam suatu kelompok tertentu berdasarkan kemiripan datanya. Dalam menentukan cluster yang baik adalah ketika suatu anggota dalam cluster memiliki kemiripan semirip mungkin sedangkan antar anggota cluster memiliki perbedaan yang cukup signifikan. Clustering banyak digunakan dalam berbagai bidang seperti segmentasi customer, rekomendasi produk, profiling spasial data, dan masih banyak lagi.[^1]
+
+Ada dua jenis clustering yaitu non-fuzzy clustering (hard clustering) dan fuzzy clustering (soft clustering). Perbedaan yang paling mendasar diantara dua jenis clustering tersebut adalah dalam non-fuzzy clustering (hard custering), setiap data akan dibagi menjadi dalam beberapa kelompok dan setiap data poin hanya dapat dimiliki dalam 1 cluster saja. Berbeda dengan fuzzy clustering (soft clustering), setiap data poin memiliki kesempatan untuk dimiliki oleh lebih dari 1 cluster.[^2]
+
+Dalam fuzzy clustering, setiap data poin akan diberikan nilai seperti peluang atau bobot untuk masuk pada setiap cluster. Setiap data poin yang memiliki jarang paling dekat dengan suatu pusat cluster, akan memiliki nilai yang lebih tinggi untuk masuk ke cluster tersebut dibandingkan dengan cluster lain. Nilai yang diberikan untuk setiap data poin menjadi bagian suatu cluster berkisar dalam rentang 0 hingga 1 seperti nilai probabilitas.[^3] 
+
+Pada artikel ini akan membahas bagaimana melakukan clustering menggunakan metode Fuzzy C-Means.
+
+## Training Objective
+
+Tujuan dari artikel ini adalah untuk :
+
+* memahami konsep Fuzzy C-Means clustering
+* memahami validasi cluster
+* mengimplementasikan Fuzzy C-Means clustering
+
+## Setup
+
+Berikut ini beberapa package yang diperlukan untuk melakukan analisis clustering menggunakan Fuzzy C-Means.
+
+```{r}
+# Data wrangling
+library(dplyr)
+
+# Visualization
+library(factoextra)
+library(ggplot2)
+
+# Fuzzy C-Means
+library(ppclust)
+library(cluster)
+library(e1071)
+```
+
+# Fuzzy C-Means Clustering
+
+Fuzzy c-means clustering merupakan suatu metode clustering yang hampir mirip seperti k-means clustering. Karena metode clustering ini mirip dengan k-means clustering, ada yang menyebut metode ini fuzzy k-means clustering. Fuzzy c-means merupakan salah satu jenis soft clustering dimana dalam mengelompokan suatu data, setiap data bisa dimiliki lebih dari satu cluster. Contohnya sebuah tomat bisa dikelompokkan ke warna merah atau warna hijau jika dalam hard clustering, namun tomat bisa dikelompokkan ke warna merah **dan** hijau dalam fuzzy clustering. Tomat berwarna merah memiliki tingkatan yang sama dengan tomat berwarna hijau. Jika dimisalkan dengan angka dari 0 sampai 1, tomat warna merah 0.5 dan tomat warna hijau 0.5. 
+
+Cara kerja dari fuzzy c-means clustering dalam mengelompokkan datanya adalah sebagai berikut :
+
+1. Menentukan banyak cluster (k) yang akan dibuat.
+2. Menentukan nilai proporsi untuk setiap data poin secara random untuk masuk dalam suatu cluster.
+3. Menghitung nilai centroid. Dalam menghitung nilai centroid, kita menggunakan formula berikut :
+
+$$C_j = \frac{\sum u_{ij}^mx}{\sum u_{ij}^m}$$
+
+4. Menghtung kembali nilai proporsi untuk setiap data poin untuk masuk pada setiap cluster. fprmula yang digunakan yaitu sebagai berikut :
+
+$$u_{ij}^m = \frac{1}{\sum (\frac{|x_i - c_j|}{|x_i - c_k|})^\frac{2}{m-1}}$$
+
+# Valudasi Cluster
+
+Suatu clustering sangat sulit untuk bisa kita tentukan keakuratan dari cluster yang kita bentuk. Oleh karena itu terdapat validasi cluster yang dapat digunakan untuk mengukur kebaikan dari hasil clustering. Menurut paper yang ditulis oleh <a href="http://www.jstatsoft.org/v61/i06/paper"> Charrad et al. </a> validasi cluster dibedakan menjadi 3 macam yaitu :
+
+* Internal cluster validation 
+* External cluster validation 
+* Relative cluster validation 
+
+Perbedaan antara validasi cluster diatas adalah sebagai berikut :
+
+## Internal Cluster Validation {.tabset}
+
+Pada validasi cluster ini menggunakan informasi internal pada data untuk melakukan evaluasi cluster yang baik dan tepat tanpa menggunakan informasi eksternal data. Biasanya yang diukur pada validasi cluster ini adalah tingkat kepadatan (compactness), keterhubungan (connectedness), dan separasi yang ada pada cluster. 
+
+* **compactness** mengukur seberapa dekat suatu objek pada cluster yang sama. Biasanya dilihat dari nilai *within-cluster variation* yang kecil atau rata-rata jarak antar cluster. 
+* **connectivity** berhubungan dengan sejauh mana suatu data poin dikelompokkan menjadi satu cluster dengan tetangga terdekatnya (nearest neighbor).
+* **separation** mengukur seberapa baik pemisah antar satu cluster dengan cluster yang lain. Biasanya dapat diukur berdasarkan jarak antar pusat cluster.
+
+Untuk mengukur internal cluster validation kita bisa menggunakan suatu indeks yaitu :
+
+### Silhouette coefficient
+
+Silhouette mengukur seberapa baik suatu observasi menjadi satu cluster atau memperkirakan nilai *rata-rata jarak antar cluster*. Nilai dari silhouette coefficient menginterpretasikan seberapa dekat suatu data pada satu cluster terhadap tetangga pada cluster yang lain. Semakin besar nilai silhouette (mendekati 1), maka semakin baik cluster tersebut.
+
+### Dunn index
+
+
+
+## External Cluster Validation
+
+Dalam melakukan evaluasi cluster, validasi cluster ini menggunakan informasi eksternal pada suatu data seperti label kelas atau kelas target yang disediakan dari sumber eksternal. Hal ini biasanya digunakan untuk mengukur kecocokan label suatu cluster yang terbentuk dengan label kelas yang ada.
+
+## Relative Cluster Validation
+
+Dalam mengevaluasi suatu metode clustering, validasi cluster ini menggunakan pendekatan dengan memberikan beberapa variasi nilai parameter yang berbeda seperti banyaknya jumlah cluster (k) pada satu metode yang sama. Biasanya cara ini digunakan untuk menentukan banyak cluster yang paling optimal. 
+
+# Clustering Mood Berdasarkan Lagu
+
+Spotify merupakan salah satu platform musik yang dapat kita gunakan untuk mendengarkan lagu. Spotify sudah menyimpan banyak sekali jenis-jenis lagu baik dari genre pop, akustik, maupun metal. Spotify juga terdapat API yang dapat digunakan oleh developer untuk mendapatkan beberapa lagu dari platform tersebut. Namun, kali ini kita akan menggunakan data spotify yang sudah tersedia dari <a href="https://www.kaggle.com/zaheenhamidani/ultimate-spotify-tracks-db"> Kaggle </a>. 
+
+Menggunakan data Spotify ini kita akan coba melakukan clustering pada beberapa data yang ada kedalam beberapa kelompok mood yang nantinya bisa digunakan untuk membuat rekomendasi lagu ketika kita sedang memiliki mood-mood tertentu. Dalam melakukan clustering, kita akan terapkan metode clustering fuzzy c-means dan akan kita bandingkan dengan metode hard clustering yaitu k-means. 
+
+## Import Data 
+
+Sebelum melakukan clustering seperti biasa kita import terlebih dahulu data yang kita butuhkan. Untuk data Spotify yang tersedia, nantinya tidak akan digunakan semua karena datanya cukup besar, oleh karena itu pada artikel ini hanya akan menggunakan 2500 data saja (hal ini dikarenakan komputasi).
+
+```{r}
+spotify <- read.csv("data_input/SpotifyFeatures.csv") %>% 
+  rename(genre = `ï..genre`)
+head(spotify)
+glimpse(spotify)
+```
+
+
+```{r}
+spotify_cl <- spotify %>% 
+  select_if(is.numeric) %>% 
+  scale()
+head(spotify_cl)
+```
+
+```{r}
+cl <- fcm(x = head(spotify_cl, 1000), centers = 4)
+summary(cl)
+```
+```{r}
+res.fcm2 <- ppclust2(cl, "kmeans")
+factoextra::fviz_cluster(res.fcm2, data = head(spotify_cl, 1000), 
+  ellipse.type = "convex",
+  palette = "jco")
+```
+
+```{r}
+cl_fanny <- cluster::fanny(x = head(spotify_cl, 1000), k = 4, metric = "SqEuclidean")
+cl_fanny$coeff
+head(cl_fanny$membership)
+```
+```{r}
+fviz_cluster(cl_fanny, ellipse.type = "convex", 
+             palette = "jco", ggtheme = theme_minimal(),
+             legend = "right")
+```
+
+```{r}
+cl_cmeans <- e1071::cmeans(x = head(spotify_cl, 1000), centers = 4, dist = "euclidean")
+head(cl_cmeans$membership)
+```
+```{r}
+fviz_cluster(list(data = head(spotify_cl, 1000), cluster=cl_cmeans$cluster), 
+             ellipse.type = "convex",
+             # ellipse.level = 0.68,
+             palette = "jco",
+             ggtheme = theme_minimal())
+```
+
+# Reference 
+
+[^1]: [DBScan Clustering](https://algotech.netlify.app/blog/dbscan-clustering/)
+[^2]: [Fuzzy Clustering](https://en.wikipedia.org/wiki/Fuzzy_clustering)
+[^3]: [Fuzzy Clustering Essentials](https://www.datanovia.com/en/lessons/fuzzy-clustering-essentials/)
+
+
+
