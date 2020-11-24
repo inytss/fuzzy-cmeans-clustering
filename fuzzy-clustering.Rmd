@@ -38,21 +38,21 @@ options(scipen = 99)
 
 ## Clustering
 
-Clustering merupakan salah satu metode machine learning dan termasuk dalam unsupervised learning. Unsupervised learning adalah metode machine learning dimana dalam data yang akan dianalisis tidak terdapat target variabel. Dalam unsupervised learning lebih fokus dalam melakukan eksplorasi data seperti mencari pola dalam data. Clustering sendiri bertujuan dalam mencari pola data yang mirip sehingga memiliki kemungkinan dalam mengelompokkan data-data yang mirip tersebut. Dalam yang telah dikelompokkan dalam clusterung biasanya disebut juga sebagai cluster. Dalam menentukan cluster yang baik adalah ketika suatu anggota dalam cluster memiliki kemiripan semirip mungkin sedangkan antar anggota cluster memiliki perbedaan yang cukup signifikan. Clustering banyak digunakan dalam berbagai bidang seperti segmentasi customer, rekomendasi produk, profiling data, dan masih banyak lagi.[^1]
+Clustering merupakan salah satu metode machine learning dan termasuk dalam unsupervised learning. Unsupervised learning adalah metode machine learning di mana dalam data yang akan dianalisis tidak terdapat target variabel. Dalam unsupervised learning lebih fokus dalam melakukan eksplorasi data seperti mencari pola dalam data. Clustering sendiri bertujuan mencari pola data yang mirip sehingga memiliki kemungkinan dalam mengelompokkan data-data yang mirip tersebut. Dalam yang telah dikelompokkan dalam clustering biasanya disebut juga sebagai cluster. Dalam menentukan cluster yang baik adalah ketika suatu anggota dalam cluster memiliki kemiripan semirip mungkin sedangkan antar anggota cluster memiliki perbedaan yang cukup signifikan. Clustering banyak digunakan dalam berbagai bidang seperti segmentasi customer, rekomendasi produk, profiling data, dan masih banyak lagi.[^1]
 
 Ada dua jenis clustering yaitu non-fuzzy clustering (hard clustering) dan fuzzy clustering (soft clustering). Perbedaan yang paling mendasar diantara dua jenis clustering tersebut adalah dalam non-fuzzy clustering (hard custering), setiap data akan dibagi menjadi dalam beberapa kelompok dan setiap data poin hanya dapat dimiliki dalam 1 cluster saja. Berbeda dengan fuzzy clustering (soft clustering), setiap data poin memiliki kesempatan untuk dimiliki oleh lebih dari 1 cluster.[^2]
 
 Dalam fuzzy clustering, setiap data poin akan diberikan nilai seperti peluang atau bobot untuk masuk pada setiap cluster. Setiap data poin yang memiliki jarang paling dekat dengan suatu pusat cluster, akan memiliki nilai yang lebih tinggi untuk masuk ke cluster tersebut dibandingkan dengan cluster lain. Nilai yang diberikan untuk setiap data poin menjadi bagian suatu cluster berkisar dalam rentang 0 hingga 1 seperti nilai probabilitas.[^3] 
 
-Pada artikel ini akan membahas bagaimana melakukan clustering menggunakan metode Fuzzy C-Means.
+Pada artikel ini akan dibahas mengenai bagaimana melakukan clustering menggunakan metode Fuzzy C-Means.
 
 ## Training Objective
 
 Tujuan dari artikel ini adalah untuk :
 
-* memahami konsep Fuzzy C-Means clustering
-* memahami validasi cluster
-* mengimplementasikan Fuzzy C-Means clustering
+* Memahami konsep Fuzzy C-Means clustering
+* Memahami validasi cluster
+* Mengimplementasikan Fuzzy C-Means clustering
 
 ## Setup
 
@@ -74,7 +74,7 @@ library(cluster)
 
 # Fuzzy C-Means Clustering
 
-Fuzzy c-means clustering merupakan suatu metode clustering yang hampir mirip seperti k-means clustering. Karena metode clustering ini mirip dengan k-means clustering, ada yang menyebut metode ini fuzzy k-means clustering. Fuzzy c-means merupakan salah satu jenis soft clustering dimana dalam mengelompokan suatu data, setiap data bisa dimiliki lebih dari satu cluster. Contohnya sebuah tomat bisa dikelompokkan ke warna merah atau warna hijau jika dalam hard clustering, namun tomat bisa dikelompokkan ke warna merah **dan** hijau dalam fuzzy clustering. Tomat berwarna merah memiliki tingkatan yang sama dengan tomat berwarna hijau. Jika dimisalkan dengan angka dari 0 sampai 1, tomat warna merah 0.5 dan tomat warna hijau 0.5. 
+Fuzzy c-means clustering merupakan suatu metode clustering yang hampir mirip seperti k-means clustering. Karena metode clustering ini mirip dengan k-means clustering, ada yang menyebut metode ini fuzzy k-means clustering. Fuzzy c-means merupakan salah satu jenis soft clustering di mana dalam mengelompokan suatu data, setiap data bisa dimiliki lebih dari satu cluster. Contohnya sebuah tomat bisa dikelompokkan ke warna merah atau warna hijau jika dalam hard clustering, namun tomat bisa dikelompokkan ke warna merah **dan** hijau dalam fuzzy clustering. Tomat berwarna merah memiliki tingkatan yang sama dengan tomat berwarna hijau. Jika dimisalkan dengan angka dari 0 sampai 1, tomat warna merah 0.5 dan tomat warna hijau 0.5. 
 
 Cara kerja dari fuzzy c-means clustering dalam mengelompokkan datanya adalah sebagai berikut :
 
@@ -84,13 +84,13 @@ Cara kerja dari fuzzy c-means clustering dalam mengelompokkan datanya adalah seb
 
 $$C_j = \frac{\sum u_{ij}^mx}{\sum u_{ij}^m}$$
 
-4. Menghtung kembali nilai proporsi untuk setiap data poin untuk masuk pada setiap cluster. fprmula yang digunakan yaitu sebagai berikut :
+4. Menghitung kembali nilai proporsi untuk setiap data poin untuk masuk pada setiap cluster. Formula yang digunakan yaitu sebagai berikut :
 
 $$u_{ij}^m = \frac{1}{\sum (\frac{|x_i - c_j|}{|x_i - c_k|})^\frac{2}{m-1}}$$
 
 # Validasi Cluster
 
-Suatu clustering sangat sulit untuk bisa kita tentukan keakuratan dari cluster yang kita bentuk. Oleh karena itu terdapat validasi cluster yang dapat digunakan untuk mengukur kebaikan dari hasil clustering. Menurut paper yang ditulis oleh <a href="http://www.jstatsoft.org/v61/i06/paper"> Charrad et al. </a> validasi cluster dibedakan menjadi 3 macam yaitu[^4] :
+Pada metode clustering, sangat sulit menentukan keakuratan dari cluster yang terbentuk. Oleh karena itu, terdapat validasi cluster yang dapat digunakan untuk mengukur kebaikan dari hasil clustering. Menurut paper yang ditulis oleh <a href="http://www.jstatsoft.org/v61/i06/paper"> Charrad et al. </a> validasi cluster dibedakan menjadi 3 macam yaitu[^4] :
 
 * Internal cluster validation 
 * External cluster validation 
@@ -102,9 +102,9 @@ Perbedaan antara validasi cluster diatas adalah sebagai berikut :
 
 Pada validasi cluster ini menggunakan informasi internal pada data untuk melakukan evaluasi cluster yang baik dan tepat tanpa menggunakan informasi eksternal data. Biasanya yang diukur pada validasi cluster ini adalah tingkat kepadatan (compactness), keterhubungan (connectedness), dan separasi yang ada pada cluster. 
 
-* **compactness** mengukur seberapa dekat suatu objek pada cluster yang sama. Biasanya dilihat dari nilai *within-cluster variation* yang kecil atau rata-rata jarak antar cluster. 
-* **connectivity** berhubungan dengan sejauh mana suatu data poin dikelompokkan menjadi satu cluster dengan tetangga terdekatnya (nearest neighbor).
-* **separation** mengukur seberapa baik pemisah antar satu cluster dengan cluster yang lain. Biasanya dapat diukur berdasarkan jarak antar pusat cluster.
+* **Compactness** mengukur seberapa dekat suatu objek pada cluster yang sama. Biasanya dilihat dari nilai *within-cluster variation* yang kecil atau rata-rata jarak antar cluster. 
+* **Connectivity** berhubungan dengan sejauh mana suatu data poin dikelompokkan menjadi satu cluster dengan tetangga terdekatnya (nearest neighbor).
+* **Separation** mengukur seberapa baik pemisah antar satu cluster dengan cluster yang lain. Biasanya dapat diukur berdasarkan jarak antar pusat cluster.
 
 Untuk mengukur internal cluster validation kita bisa menggunakan suatu indeks yaitu :
 
@@ -133,7 +133,7 @@ Menggunakan data Spotify ini kita akan coba melakukan clustering pada beberapa d
 
 ## Import Data 
 
-Sebelum melakukan clustering seperti biasa kita import terlebih dahulu data yang kita butuhkan. Untuk data Spotify yang tersedia, nantinya tidak akan digunakan semua karena datanya cukup besar, oleh karena itu pada artikel ini hanya akan menggunakan 1000 data saja (hal ini dikarenakan komputasi).
+Sebelum melakukan clustering, seperti biasa kita import terlebih dahulu data yang kita butuhkan. Untuk data Spotify yang tersedia, nantinya tidak akan digunakan semua karena datanya cukup besar, oleh karena itu pada artikel ini hanya akan menggunakan 1000 data saja (hal ini dikarenakan komputasi).
 
 ```{r}
 spotify <- read.csv("data_input/SpotifyFeatures.csv", encoding = "UTF-8") %>% 
@@ -304,12 +304,14 @@ Selanjutnya kita akan coba lihat nilai Dunn index pada cluster kedua yang telah 
 ```{r}
 sp_clust2$coeff
 ```
+
 Nilai Dunn index yang kita peroleh sebesar 0.295. Untuk mengetahui hasil cluster yang kita bentuk sudah baik berdasarkan nilai Dunn index yaitu dengan mendapatkan Dunn index yang semakin besar.
 
 Sebelum membuat visualisasi dari cluster, kita perlu mengetahui berapa banyak cluster yang terbentuk dari nilai derajat keanggotaan yang ada. 
 ```{r}
 sp_clust2$clustering %>% unique()
 ```
+
 Dari hasil pengelompokan menjadi 4 kelompok, ternyata hanya 3 kelompok yang berhasil terisi. Artinya bahwa dengan menggunakan k=4, fuzzy c-means hanya mampu menseparasikan data berdasarkan 3 kelompok yang berbeda. Apabila kita lihat berdasarkan visualisasi cluster yang terbentuk dari 1000 data yang digunakan yaitu sebagai berikut.
 ```{r}
 fviz_cluster(sp_clust2, legend = "right", geom = "point")+
@@ -319,6 +321,7 @@ fviz_cluster(sp_clust2, legend = "right", geom = "point")+
   theme(panel.grid.minor = element_line(linetype = "dashed"),
         panel.grid.major = element_line(linetype = "dashed"))
 ```
+
 Ternyata dari hasil visualisasi cluster dan berdasarkan sebaran data yang terlihat, data akan lebih condong apabila di kelompokkan menjadi 3 cluster. Bisa saja ketika kita paksakan menjadi 4 cluster, terdapat 2 cluster yang memiliki kesamaan didalamnya dan ini sangat bertentangan dalam tujuan clustering yaitu mengelompokkan data yang memiliki perbedaan yang signifikan.
 
 Kita akan coba buat clustering kembali dengan menggunakan k=3 dan memvisualisasikannya. 
@@ -364,6 +367,7 @@ spotify_sample %>%
 ```
 
 ## Cluster 1
+
 ### Cluster yang Menunjukkan Energetic
 
 Cluster 1 merupakan cluster yang memiliki tingkat valence, energy, danceability, loudness, tempo, dan popularity yang tinggi. Cluster ini memiliki banyak anggota 235 data. 
